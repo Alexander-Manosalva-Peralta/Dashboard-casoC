@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portada</title>
+    <style>
+        /* Reset y estilos generales */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Sección de portada */
+        #intro {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #4facfe, #00f2fe);
+            color: white;
+            text-align: center;
+        }
+
+        #intro h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        #intro p {
+            font-size: 1.5em;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        /* Botón */
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- PORTADA -->
+    <section id="intro">
+        <h1>Bienvenido a Nuestra Página</h1>
+        <p>Esta es la portada. Haz clic en el botón para ingresar al contenido principal.</p>
+        <a href="index.html" class="btn">Ir al Inicio</a>
+    </section>
+</body>
+</html>
