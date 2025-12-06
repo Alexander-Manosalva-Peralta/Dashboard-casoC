@@ -8,6 +8,10 @@
   <!-- Chart.js para gráficas -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+  <!-- Google Fonts fallback (SF Pro no disponible libremente) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
   :root{
     --ucv-red: #C00000;
@@ -21,264 +25,233 @@
     --shadow: 0 10px 30px rgba(0,0,0,0.08);
   }
 
-  *{
-    box-sizing:border-box;
-    font-family: "SF Pro Display", "Inter", system-ui, sans-serif;
+  *{ box-sizing:border-box; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+
+  html,body{ height:100%; margin:0; padding:0; background:var(--bg); color:var(--text-dark); -webkit-font-smoothing:antialiased; }
+
+  /* =========== LANDING (MEJORADA) =========== */
+  #landing {
+    position: fixed;
+    inset: 0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,0.03), transparent 10%),
+      linear-gradient(120deg, rgba(0,51,102,0.92) 0%, rgba(192,0,0,0.92) 100%);
+    color: #fff;
+    transition: opacity .45s ease, transform .45s ease;
+    backdrop-filter: blur(6px);
   }
-
-  body{
-    margin:0;
-    background: var(--bg);
-    color: var(--text-dark);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+  #landing.hidden { opacity:0; pointer-events:none; transform: translateY(-8px) scale(.995); }
+  #landing .panel {
+    width: min(980px, 94%);
+    border-radius: 16px;
+    padding: 36px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 30px 80px rgba(2,6,23,0.35);
+    display:flex;
+    gap:24px;
+    align-items:center;
+    transform-origin:center;
+    animation: panelIn .7s cubic-bezier(.2,.9,.3,1);
   }
+  @keyframes panelIn {
+    from { transform: translateY(16px) scale(.98); opacity:0; }
+    to { transform: translateY(0) scale(1); opacity:1; }
+  }
+  #landing .logo {
+    width:84px; height:84px; border-radius:22px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:28px;
+    color: white; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  #landing .content { flex:1; text-align:left; }
+  #landing h1 { margin:0; font-size:34px; letter-spacing:-0.6px; font-weight:800; }
+  #landing p.lead { margin:6px 0 12px 0; color: rgba(255,255,255,0.95); font-size:15px; line-height:1.4; }
+  #landing .cta-row { display:flex; gap:12px; align-items:center; margin-top:6px; }
+  .btn-landing {
+    background: #fff; color: var(--ucv-blue); font-weight:800; border-radius:10px;
+    padding:12px 18px; border:0; cursor:pointer; font-size:15px; box-shadow: 0 12px 30px rgba(2,6,23,0.18);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn-landing:hover{ transform: translateY(-4px); box-shadow:0 18px 40px rgba(2,6,23,0.22); }
+  .btn-landing.secondary { background: transparent; color: rgba(255,255,255,0.92); border:1px solid rgba(255,255,255,0.12); padding:10px 16px; font-weight:600; }
+  #landing small { color: rgba(255,255,255,0.75); display:block; margin-top:8px; font-size:13px; }
 
-  /* ========================= HEADER ========================= */
+  /* tiny helper */
+  .muted { color:var(--text-muted); }
 
+  /* =========== HEADER / LAYOUT =========== */
   header{
     background: linear-gradient(90deg, var(--ucv-blue), var(--ucv-red));
     color:white;
-    padding:22px 0;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    padding:18px 0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    position:sticky;
+    top:0;
+    z-index:40;
   }
 
-  h1,h2,h3,h4{
-    letter-spacing:-0.5px;
-  }
-    .wrap{
-    display:flex;
-    height: calc(100vh - 90px);
-  }
+  .wrap{ display:flex; height: calc(100vh - 70px); }
 
   nav{
     width:270px;
     background:rgba(255,255,255,0.55);
     border-right:1px solid var(--border-light);
-    padding:25px 18px;
+    padding:22px 18px;
     overflow-y:auto;
-    backdrop-filter: blur(20px);
-    box-shadow: inset -5px 0 10px rgba(0,0,0,0.06);
+    backdrop-filter: blur(14px);
+    box-shadow: inset -5px 0 10px rgba(0,0,0,0.04);
   }
+  nav h2{ margin:0 0 12px 0; font-size:18px; font-weight:700; color:var(--ucv-blue); }
 
-  nav h2{
-    margin:0 0 16px 0;
-    font-size:20px;
-    font-weight:700;
-    color:var(--ucv-blue);
+  .menu-item{ padding:10px 12px; border-radius:10px; margin-bottom:8px; cursor:pointer;
+    font-size:14px; color:var(--text-dark); font-weight:600; background:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.25); transition: all .18s ease; display:flex; align-items:center; gap:10px;
   }
+  .menu-item svg{ width:16px; height:16px; opacity:.85; }
+  .menu-item:hover{ background: var(--ucv-blue); color:white; transform: translateX(4px); }
 
-  .menu-item{
-    padding:12px 15px;
-    border-radius:10px;
-    margin-bottom:10px;
-    cursor:pointer;
-    font-size:14px;
-    color:var(--text-dark);
-    font-weight:500;
-    background:rgba(255,255,255,0.5);
-    border:1px solid rgba(255,255,255,0.25);
-    transition: all .25s ease;
-  }
+  main{ flex:1; padding:24px; overflow-y:auto; min-height:80vh; }
 
-  .menu-item:hover{
-    background: var(--ucv-blue);
-    color:white;
-    transform: translateX(4px);
-  }
+  /* =========== CARDS =========== */
+  .card{ background:var(--card-bg); border-radius:12px; padding:18px 20px; margin-bottom:18px; border:1px solid #f1f3f7; box-shadow:0 6px 20px rgba(2,6,23,0.03); }
+  .row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .col{ flex:1 1 420px; }
 
-  /* ========================= MAIN ========================= */
+  h3{ margin:0 0 8px 0; font-size:18px; color:var(--ucv-blue); }
+  small{ color:var(--text-muted); }
 
-  main{
-    flex:1;
-    padding:28px;
-    overflow-y:auto;
-  }
+  canvas{ max-height:420px; width:100% !important; display:block; }
 
+  .kpis{ display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
+  .kpi{ background:linear-gradient(180deg,#f8fffb,#f0fdfa); padding:12px; border-radius:10px; min-width:140px; box-shadow:0 6px 18px rgba(2,6,23,0.04); border:1px solid rgba(0,0,0,0.04); }
+  .kpi small{ display:block; color:var(--text-muted); font-size:12px; }
+  .kpi div{ font-size:18px; font-weight:800; color:var(--ucv-blue); }
 
-  /* =================== CARDS ==================== */
+  .desc{ margin-top:12px; color:var(--text-muted); font-size:14px; background:#fafcff; padding:12px; border-radius:10px; border:1px solid rgba(10,12,20,0.04); line-height:1.45; }
 
-  .card{
-    background:var(--card);
-    border-radius:14px;
-    padding:20px 22px;
-    margin-bottom:22px;
-    box-shadow:var(--shadow-soft);
-    border:1px solid #f1f3f7;
-    transition:.25s ease;
-  }
+  .table-wrap{ max-height:360px; overflow:auto; border-radius:10px; border:1px solid #e5e9ef; box-shadow:0 2px 10px rgba(0,0,0,0.03); }
 
-  .card:hover{
-    transform:translateY(-2px);
-    box-shadow:var(--shadow-strong);
-  }
+  table{ width:100%; border-collapse:collapse; font-size:14px; background:white; }
+  th{ background:#f3f7f9; padding:10px; text-align:left; font-weight:700; color:var(--ucv-blue); }
+  td{ padding:10px; border-bottom:1px solid #eef2f7; }
+  tr:hover td{ background:#f8fafc; }
 
-  .row{
-    display:flex;
-    gap:18px;
-    flex-wrap:wrap;
-  }
+  .btn{ background:var(--accent); color:white; padding:8px 12px; border-radius:8px; border:0; cursor:pointer; font-weight:700; font-size:14px; transition:.14s ease; }
+  .btn.secondary{ background:#eef2f2; color:var(--text-dark); font-weight:700; }
 
-  .col{
-    flex:1 1 420px;
-  }
+  #rawPre{ background:#0b1220; color:#e6eef0; padding:12px; border-radius:8px; max-height:320px; overflow:auto; font-family:monospace; font-size:13px; box-shadow: inset 0 0 8px rgba(0,0,0,0.2); }
 
-  h3{
-    margin:0 0 6px 0;
-    font-size:19px;
-    font-weight:700;
-    color:var(--ucv-blue);
-  }
-
-  small{
-    color:var(--muted);
-  }
-
-  /* =================== CANVAS ==================== */
-
-  canvas{
-    max-height:450px;
-    width:100% !important;
-    display:block;
-  }
-
-  /* =================== TABLAS ==================== */
-
-  .table-wrap{
-    max-height:360px;
-    overflow:auto;
-    border-radius:10px;
-    border:1px solid #e5e9ef;
-    box-shadow:0 2px 10px rgba(0,0,0,0.03);
-  }
-
-  table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:14px;
-    background:white;
-  }
-
-  th{
-    background:#f3f7f9;
-    padding:10px;
-    text-align:left;
-    font-weight:600;
-    color:var(--ucv-blue);
-  }
-
-  td{
-    padding:10px;
-    border-bottom:1px solid #eef2f7;
-  }
-
-  tr:hover td{
-    background:#f8fafc;
-  }
-
-  /* =================== DESCRIPCIONES ==================== */
-
-  .desc{
-    margin-top:12px;
-    color:var(--muted);
-    font-size:14px;
-    background:#fafcff;
-    padding:14px;
-    border-radius:10px;
-    border:1px solid rgba(10,12,20,0.05);
-    line-height:1.5;
-  }
-
-  /* =================== KPIs ==================== */
-
-  .kpis{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-
-  .kpi{
-    background:linear-gradient(180deg,#f8fffb,#f0fdfa);
-    padding:16px;
-    border-radius:12px;
-    min-width:150px;
-    box-shadow:0 6px 18px rgba(2,6,23,0.04);
-    border:1px solid rgba(0,0,0,0.05);
-  }
-
-  .kpi small{
-    display:block;
-    color:var(--muted);
-    font-size:12px;
-  }
-
-  .kpi div{
-    font-size:19px;
-    font-weight:700;
-    margin-top:6px;
-    color:var(--ucv-blue);
-  }
-
-  /* =================== BOTONES ==================== */
-
-  .btn{
-    background:var(--accent);
-    color:white;
-    padding:8px 12px;
-    border-radius:8px;
-    border:0;
-    cursor:pointer;
-    font-weight:600;
-    font-size:14px;
-    transition:.2s ease;
-  }
-
-  .btn:hover{
-    filter:brightness(1.15);
-    transform:translateY(-1px);
-  }
-
-  .btn.secondary{
-    background:#eef2f2;
-    color:var(--title);
-  }
-
-  /* =================== RAW PRE ==================== */
-
-  #rawPre{
-    background:#0b1220;
-    color:#e6eef0;
-    padding:14px;
-    border-radius:10px;
-    max-height:360px;
-    overflow:auto;
-    font-family:monospace;
-    font-size:13px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
-  }
-
-  /* =================== RESPONSIVE ==================== */
+  footer{ padding:14px; text-align:center; color:var(--text-muted); font-size:13px; }
 
   @media (max-width:1100px){
-    nav{display:none}
-    .wrap{height:auto}
+    nav{ display:none; }
+    .wrap{ height:auto; }
+    #landing .panel{ padding:20px; gap:12px; }
+    #landing h1{ font-size:22px; }
   }
+
+
+/* Imagen estilo Apple */
+.landing-img {
+    width: 170px;
+    height: auto;
+    margin-bottom: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: fadeIn 1.4s ease;
+}
+
+/* Título */
+.landing-title {
+    font-size: 40px;
+    font-weight: 800;
+    margin: 0;
+}
+
+/* Subtítulo */
+.landing-sub {
+    font-size: 17px;
+    opacity: 0.9;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+/* Botón */
+.landing-btn {
+    background: white;
+    color: var(--ucv-blue);
+    padding: 14px 26px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.landing-btn:hover {
+    background: #f2f6ff;
+    transform: translateY(-3px);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes floatUp {
+    from {opacity: 0; transform: translateY(25px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
 </style>
 
 </head>
 <body>
 
-<header>
+<!-- ========== LANDING (RESULTADO MEJORADO) ========== -->
+<div id="landing" role="dialog" aria-modal="true">
+  <div class="panel" role="document">
+    <div class="logo" aria-hidden="true">DC</div>
+    <img src="assets/ortada.png" class="landing-img" alt="Imagen de portada">
 
+
+    <div class="content">
+      <h1>Dashboard — Caso C</h1>
+      <p class="lead">Análisis completo de consumos (Ene 2024 — Ago 2025). KPIs, Factor de Potencia, Banco de Capacitores y Evaluación tarifaria óptima.</p>
+      <div class="cta-row">
+        <button class="btn-landing" id="enterBtn">Ingresar al Dashboard</button>
+
+      </div>
+      <small>Desarrollado por estudiantes de la Universidad Cesar Vallejo .</small>
+    </div>
+    <div style="width:220px; text-align:right;">
+      <!-- small snapshot mini-kpis -->
+      <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:12px;color:rgba(255,255,255,0.9)">Periodo</div>
+        <div style="font-weight:800;font-size:20px">Ene 2024 - Ago 2025</div>
+        <div style="margin-top:8px;font-size:13px;color:rgba(255,255,255,0.9)">HFP >> HP</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ========== /LANDING ========== -->
+
+<header>
   <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center">
     <div>
-      <h1 style="margin:0;font-size:20px">Dashboard & Informe — Caso C</h1>
-      <small style="opacity:.9">Histórico de consumos y lecturas — Ene 2024 a Ago 2025</small>
+      <h1 style="margin:0;font-size:18px;color:#fff">Dashboard & Informe — Caso C</h1>
+      <small style="opacity:.95;color:rgba(255,255,255,0.9)">Histórico de consumos y lecturas — Ene 2024 a Ago 2025</small>
     </div>
     <div style="text-align:right">
-      <small style="opacity:.9">Fecha: Diciembre 2025</small><br>
-      <span class="muted-pill" id="dataSourceBadge">Fuente: caso_c_dataset.csv</span>
+      <small style="opacity:.95;color:rgba(255,255,255,0.9)">Fecha: Diciembre 2025</small><br>
+      <span class="muted-pill" id="dataSourceBadge" style="color:#fff">Fuente: caso_c_dataset.csv</span>
     </div>
   </div>
 </header>
@@ -286,8 +259,11 @@
 <div class="wrap">
   <nav>
     <h2>Menú / Secciones</h2>
-    <div class="menu-item" onclick="goTo('overview')">Resumen & KPIs</div>
-    <div class="menu-item" onclick="goTo('raw')">Datos originales (CSV)</div>
+    <div class="menu-item" onclick="goTo('overview')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zM13 21h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Resumen & KPIs
+    </div>
+    <div class="menu-item" onclick="goTo('raw')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5v14h18V5H3zm16 12H5V7h14v10z"/></svg> Datos originales (CSV)</div>
     <div class="menu-item" onclick="goTo('fp')">1. Factor de Potencia (FP)</div>
     <div class="menu-item" onclick="goTo('act-react')">2. Energía Activa vs Reactiva</div>
     <div class="menu-item" onclick="goTo('hp-hfp')">3. Hora Punta vs Fuera Punta</div>
@@ -299,38 +275,34 @@
     <div class="menu-item" onclick="goTo('penalidades')">9. Penalidades estimadas</div>
     <div class="menu-item" onclick="goTo('md')">10. Máxima Demanda (MD) vs Contratada</div>
     <div class="menu-item" onclick="goTo('proyecciones')">Proyecciones Sep-Dec 2025</div>
+    <div class="menu-item" onclick="goTo('analisis')">Evaluación Tarifaria Óptima (Análisis Económico)</div>
     <div class="menu-item" onclick="goTo('conclusiones')">Conclusiones & Recomendaciones</div>
 
-    <hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:12px 0">
-    <div style="font-size:13px;color:#cdebe8;margin-bottom:8px">Acciones</div>
+    <hr style="border:none;border-top:1px solid rgba(0,0,0,0.04);margin:12px 0">
+    <div style="font-size:13px;color:#6b7280;margin-bottom:8px">Acciones</div>
     <div style="margin-top:8px">
       <button class="btn" onclick="downloadCSV()">Descargar CSV (usado)</button>
       <button class="btn secondary" onclick="printReport()">Generar PDF / Imprimir</button>
     </div>
   </nav>
 
-  <main id="main">
-
+  <main id="main" tabindex="-1">
     <!-- OVERVIEW -->
     <section id="overview" class="card">
       <h3>RESUMEN EJECUTIVO & KPIs</h3>
       <small>Visión rápida de los indicadores principales extraídos del CSV.</small>
-
-      <div class="kpis" id="kpiContainer">
-        <!-- KPIs se llenan desde JS -->
-      </div>
-
+      <div class="kpis" id="kpiContainer"></div>
       <div style="margin-top:12px" class="desc">
         Este dashboard muestra el análisis completo del Caso C — incluye FP, consumos por mes,
         energía HP/HFP, energía reactiva, dimensionamiento del banco de capacitores, proyecciones
-        y recomendaciones comerciales. Los cálculos se basan en el CSV situado en <code>./data/caso_c_dataset.csv</code>.
+        y recomendaciones comerciales.
       </div>
     </section>
 
     <!-- RAW DATA -->
     <section id="raw" class="card">
       <h3>Datos originales (CSV) — Vista reducida</h3>
-      <small>Revisa el dataset mes a mes tal como se extrajo del PDF.</small>
+      <small>Dataset mes a mes tal como se extrajo del PDF.</small>
       <div style="margin-top:12px" class="table-wrap">
         <pre id="rawPre">Cargando datos...</pre>
       </div>
@@ -344,7 +316,6 @@
       <h3>1. Factor de Potencia (FP) — Mensual</h3>
       <canvas id="chartFP"></canvas>
       <div class="desc" id="descFP"></div>
-
       <h4 style="margin-top:12px">Tabla: FP por mes y penalización (umbral 0.92)</h4>
       <div id="fpTableWrap"></div>
     </section>
@@ -368,19 +339,14 @@
       <h3>4. Dimensionamiento de Banco de Capacitores</h3>
       <small>Se calcula Q actual, Q deseada (FP objetivo) y Qc necesario.</small>
       <div class="row">
-        <div class="col">
-          <canvas id="chartBank"></canvas>
-        </div>
+        <div class="col"><canvas id="chartBank"></canvas></div>
         <div class="col">
           <h4>Tabla: Q actual / Q deseada / Qc (kVAr)</h4>
           <div id="bankTableWrap"></div>
-          <div style="margin-top:10px" class="desc">
-            FP objetivo por defecto: <b id="fpGoalText">0.95</b>. Puedes cambiarlo en el código o en la UI.
-          </div>
+          <div style="margin-top:10px" class="desc">FP objetivo por defecto: <b id="fpGoalText">0.95</b>.</div>
         </div>
       </div>
     </section>
-
     <!-- P Q S -->
     <section id="pqs" class="card">
       <h3>5. Perfil trimestral: P, Q y S</h3>
@@ -439,6 +405,27 @@
       <div class="desc" id="descProy"></div>
     </section>
 
+    <!-- ANALISIS TECNICO-ECONOMICO (NUEVO Y DEMOSTRATIVO) -->
+    <section id="analisis" class="card">
+      <h3>Evaluación Tarifaria Óptima (Análisis Económico)</h3>
+      <div class="row">
+        <div class="col">
+          <h4>Distribución HP vs HFP (2024–2025)</h4>
+          <canvas id="chartDistribHPHFP"></canvas>
+          <div class="desc" id="descDistrib"></div>
+        </div>
+        <div class="col">
+          <h4>Comparador de tarifas (estimación)</h4>
+          <canvas id="chartTarifas"></canvas>
+          <div class="desc" id="descTarifas"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px" class="desc" id="analisisContent">
+        Cálculos en curso...
+      </div>
+    </section>
+
     <!-- CONCLUSIONES -->
     <section id="conclusiones" class="card">
       <h3>Conclusiones & Recomendaciones</h3>
@@ -451,18 +438,18 @@
 <footer>
   Dashboard generado a partir de “CASO C – Histórico de Consumos y Lecturas”. Diseñado para presentación.
 </footer>
-<!-- ================= PARTE 2/3: PARSER, UTILS y FLUJO INICIAL ================= -->
+
+<!-- ================= PARTE 2: SCRIPTS (PARSER, UTILS) ================= -->
 <script>
 /* ========== CONFIG ========== */
-const CSV_PATH = './data/caso_c_dataset.csv'; // ruta relativa dentro del proyecto
+const CSV_PATH = './data/caso_c_dataset.csv';
 const FP_UMBRAL = 0.92;
 const FP_OBJETIVO = 0.95;
-const HORAS_MES = 720; // uso aproximado como en tu especificación
+const HORAS_MES = 720;
 
-/* ========== Helper DOM ========== */
+/* ========== Helpers DOM & UI ========== */
 function _(id){ return document.getElementById(id); }
 function goTo(sectionId){
-  // scroll suave a la sección, y pequeño highlight
   const el = _(sectionId);
   if(!el) return;
   el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -471,78 +458,72 @@ function goTo(sectionId){
   setTimeout(()=> el.style.boxShadow = '', 900);
 }
 
-/* ========== Formatting helpers ========== */
+/* Landing handlers (improved) */
+document.addEventListener('DOMContentLoaded', () => {
+  const landing = _('landing');
+  const enterBtn = _('enterBtn');
+  const howBtn = _('howBtn');
+
+  function hideLanding(){
+    if(!landing) return;
+    landing.classList.add('hidden');
+    setTimeout(()=> landing.style.display = 'none', 700);
+  }
+  enterBtn?.addEventListener('click', hideLanding);
+  howBtn?.addEventListener('click', () => {
+    alert('Resumen rápido: Consumo HFP >> HP. Recomendación preliminar: Tarifa diferenciada (MT3/BT5).');
+  });
+  window.addEventListener('scroll', () => { if(window.scrollY > 100) hideLanding(); }, {passive:true});
+});
+
+/* Formatting helpers */
 function formatNum(n,dec=2){
   if(n===null || n===undefined || isNaN(n)) return 'n/a';
-  // show thousands with comma, period decimal
   return Number(n).toLocaleString('en-US',{minimumFractionDigits:dec, maximumFractionDigits:dec});
 }
 function safeParseFloat(s){
   if(s===null || s===undefined) return 0;
-  // remove spaces, non-number except comma and dot, replace comma thousands
   const cleaned = String(s).replace(/\s+/g,'').replace(/\./g,'').replace(/,/g,'');
   const v = Number(cleaned);
   return isNaN(v) ? 0 : v;
 }
 
-/* ========== CSV Parser robusto (adaptado a tu CSV exacto) ==========
-   - Espera encabezado: Periodo,Energia_Activa_Total,Energia_Activa_HP,...
-   - Detecta delimitador (coma/;), normaliza decimales con coma/miles
-   - Mapea exactamente las columnas que nos interesan
-   - Devuelve lista ordenada de filas: {Periodo,Mes,Año, Energia_Activa_Total, Energia_Activa_HP, Energia_Activa_HFP, Energia_Reactiva, Potencia_HP, Potencia_HFP}
-*/
+/* CSV parser (robusto) */
 async function fetchAndParseCSV(path){
   const res = await fetch(path);
   if(!res.ok) throw new Error('HTTP ' + res.status + ' — no se pudo cargar CSV: ' + path);
   let text = await res.text();
-
-  // Normalize BOM and line endings
   text = text.replace(/^\uFEFF/, '').replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim();
-
   if(!text) throw new Error('CSV vacío o solo espacios');
-
-  // Try detect delimiter: prefer comma, but if semicolons more frequent, use ;
   const firstChunk = text.split('\n').slice(0,6).join('\n');
   const commaCount = (firstChunk.match(/,/g) || []).length;
   const semiCount = (firstChunk.match(/;/g) || []).length;
   const delim = commaCount >= semiCount ? ',' : ';';
-
-  // Split lines and find header
   const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
-  let headerLine = lines[0];
-  let headerIdx = 0;
+  let headerLine = lines[0]; let headerIdx = 0;
 
-  // If first line not header, try find header containing "Periodo" or "Energia_Activa_Total"
   if(!/periodo/i.test(headerLine) || !/energia/i.test(headerLine)){
     for(let i=0;i<Math.min(6,lines.length);i++){
       if(/periodo/i.test(lines[i]) || /energia_activ/i.test(lines[i]) || /energia_activatotal/i.test(lines[i])){
-        headerLine = lines[i];
-        headerIdx = i;
-        break;
+        headerLine = lines[i]; headerIdx = i; break;
       }
     }
   }
 
   const headers = headerLine.split(delim).map(h => h.trim());
-
-  // Normalize headers to canonical keys
   const norm = h => h.toString().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'').replace(/[^a-zA-Z0-9_]/g,'').toLowerCase();
   const headerNorm = headers.map(norm);
-
-  // mapping indices
   const idx = {};
   headerNorm.forEach((h,i)=>{
     if(/^periodo$/.test(h) || h.includes('periodo') || h.includes('period')) idx.periodo = i;
     if(h.includes('energia_activatotal') || h.includes('energiaactivatotal') || h.includes('energia_activat')) idx.energia_activatotal = i;
-    if(h.includes('energia_activahp') || h.includes('energia_activahora') || h.includes('hora') && h.includes('punta')) idx.energia_activahp = i;
-    if(h.includes('energia_activahfp') || h.includes('fuera') || (h.includes('hfp') || (h.includes('fuera') && h.includes('punta')))) idx.energia_activahfp = i;
+    if(h.includes('energia_activahp') || h.includes('hora') && h.includes('punta')) idx.energia_activahp = i;
+    if(h.includes('energia_activahfp') || h.includes('hfp') || (h.includes('fuera') && h.includes('punta'))) idx.energia_activahfp = i;
     if(h.includes('energia_reactiva') || h.includes('reactiva')) idx.energia_reactiva = i;
-    if(h.includes('potencia_hp') || (h.includes('potencia') && h.includes('hp')) || (h.includes('hora') && h.includes('punta') && h.includes('potencia'))) idx.potencia_hp = i;
-    if(h.includes('potencia_hfp') || (h.includes('potencia') && h.includes('hfp')) || (h.includes('fuera') && h.includes('potencia'))) idx.potencia_hfp = i;
+    if(h.includes('potencia_hp') || (h.includes('potencia') && h.includes('hp'))) idx.potencia_hp = i;
+    if(h.includes('potencia_hfp') || (h.includes('potencia') && h.includes('hfp'))) idx.potencia_hfp = i;
   });
 
-  // Fallback mappings by exact expected names if some are undefined
-  const headerJoined = headerNorm.join(',');
   if(idx.periodo === undefined){
     const f = headerNorm.findIndex(h=> h.includes('periodo') || h.includes('period'));
     if(f>=0) idx.periodo = f;
@@ -551,29 +532,17 @@ async function fetchAndParseCSV(path){
     const f = headerNorm.findIndex(h=> h.includes('energia') && h.includes('total') || h.includes('activatotal'));
     if(f>=0) idx.energia_activatotal = f;
   }
-  // final fallback: assume fixed order if header fails (as last resort)
-  const expectedOrder = ['Periodo','Energia_Activa_Total','Energia_Activa_HP','Energia_Activa_HFP','Energia_Reactiva','Potencia_HP','Potencia_HFP'];
   if(Object.keys(idx).length < 4){
-    // try mapping by position if header seems minimal
-    // only do this if header row has exactly 7 columns matching expected
     if(headers.length >= 6){
-      idx.periodo = idx.periodo ?? 0;
-      idx.energia_activatotal = idx.energia_activatotal ?? 1;
-      idx.energia_activahp = idx.energia_activahp ?? 2;
-      idx.energia_activahfp = idx.energia_activahfp ?? 3;
-      idx.energia_reactiva = idx.energia_reactiva ?? 4;
-      idx.potencia_hp = idx.potencia_hp ?? 5;
-      idx.potencia_hfp = idx.potencia_hfp ?? 6;
+      idx.periodo = idx.periodo ?? 0; idx.energia_activatotal = idx.energia_activatotal ?? 1; idx.energia_activahp = idx.energia_activahp ?? 2; idx.energia_activahfp = idx.energia_activahfp ?? 3; idx.energia_reactiva = idx.energia_reactiva ?? 4; idx.potencia_hp = idx.potencia_hp ?? 5; idx.potencia_hfp = idx.potencia_hfp ?? 6;
     }
   }
 
-  // Build rows
   const dataRows = [];
   for(let i = headerIdx + 1; i < lines.length; i++){
     const line = lines[i];
     if(!line) continue;
     const cols = line.split(delim).map(c => c.trim());
-    // Some CSV values have thousands comma -6,345. do cleanse later in safeParseFloat
     const row = {
       Periodo: cols[idx.periodo] ?? cols[0] ?? '',
       Energia_Activa_Total: safeParseFloat(cols[idx.energia_activatotal] ?? cols[1] ?? 0),
@@ -583,14 +552,10 @@ async function fetchAndParseCSV(path){
       Potencia_HP: safeParseFloat(cols[idx.potencia_hp] ?? cols[5] ?? 0),
       Potencia_HFP: safeParseFloat(cols[idx.potencia_hfp] ?? cols[6] ?? 0)
     };
-
-    // derive month and year from Periodo (expect format like "Ago-2025" or "Ago-2025")
     const p = row.Periodo || '';
     const parts = p.split(/[-\s]/).map(s=>s.trim());
     row.Mes = parts[0] ? parts[0] : '';
     row.Año = parts[1] ? parseInt(parts[1]) : (parts.length>1 ? parseInt(parts[1]) : null);
-
-    // Accept only if Periodo exists and at least one numeric > 0
     if(row.Periodo && (row.Energia_Activa_Total || row.Energia_Activa_HP || row.Energia_Activa_HFP || row.Energia_Reactiva || row.Potencia_HP || row.Potencia_HFP)){
       dataRows.push(row);
     }
@@ -598,7 +563,6 @@ async function fetchAndParseCSV(path){
 
   if(dataRows.length === 0) throw new Error('No se extrajeron filas del CSV. Revisa formato/encabezados.');
 
-  // Sort chronological: by year then month (map months Spanish->num)
   const monthMap = {ene:1,feb:2,mar:3,abr:4,may:5,jun:6,jul:7,ago:8,set:9,sep:9,oct:10,nov:11,dic:12};
   dataRows.forEach(r=>{
     const m = (r.Mes || '').toString().toLowerCase().slice(0,3);
@@ -606,92 +570,45 @@ async function fetchAndParseCSV(path){
     r._year = r.Año || 0;
   });
   dataRows.sort((a,b) => (a._year - b._year) || (a._mnum - b._mnum));
-
   console.info('CSV parsed rows:', dataRows.length);
   return dataRows;
 }
 
-/* ========== UI utilities: download CSV, show full table, print ========== */
+/* UI utilities */
 function downloadCSV(){
-  // use current parsed rows if available
   const rows = window.__PARSED_ROWS || [];
-  if(!rows.length){
-    alert('No hay datos cargados para descargar.');
-    return;
-  }
-  // build CSV string
+  if(!rows.length){ alert('No hay datos cargados para descargar.'); return; }
   const header = ['Periodo','Energia_Activa_Total','Energia_Activa_HP','Energia_Activa_HFP','Energia_Reactiva','Potencia_HP','Potencia_HFP'];
   const lines = [header.join(',')];
-  rows.forEach(r => {
-    lines.push([
-      `"${r.Periodo}"`,
-      r.Energia_Activa_Total,
-      r.Energia_Activa_HP,
-      r.Energia_Activa_HFP,
-      r.Energia_Reactiva,
-      r.Potencia_HP,
-      r.Potencia_HFP
-    ].join(','));
-  });
+  rows.forEach(r => { lines.push([`"${r.Periodo}"`, r.Energia_Activa_Total, r.Energia_Activa_HP, r.Energia_Activa_HFP, r.Energia_Reactiva, r.Potencia_HP, r.Potencia_HFP].join(',')); });
   const csv = lines.join('\n');
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'caso_c_dataset_export.csv';
-  document.body.appendChild(a);
-  a.click();
+  const a = document.createElement('a'); a.href = url; a.download = 'caso_c_dataset_export.csv'; document.body.appendChild(a); a.click();
   setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 5000);
 }
 
 function showFullTable(){
   const rows = window.__PARSED_ROWS || [];
-  if(!rows.length){
-    alert('No hay datos cargados para mostrar.');
-    return;
-  }
+  if(!rows.length){ alert('No hay datos cargados para mostrar.'); return; }
   const cols = ['Periodo','Energia_Activa_Total','Energia_Activa_HP','Energia_Activa_HFP','Energia_Reactiva','Potencia_HP','Potencia_HFP'];
   let html = '<div style="max-height:420px;overflow:auto"><table><thead><tr>';
   cols.forEach(c => html += `<th>${c}</th>`);
   html += '</tr></thead><tbody>';
-  rows.forEach(r=>{
-    html += `<tr><td>${r.Periodo}</td><td>${formatNum(r.Energia_Activa_Total)}</td><td>${formatNum(r.Energia_Activa_HP)}</td><td>${formatNum(r.Energia_Activa_HFP)}</td><td>${formatNum(r.Energia_Reactiva)}</td><td>${formatNum(r.Potencia_HP)}</td><td>${formatNum(r.Potencia_HFP)}</td></tr>`;
-  });
+  rows.forEach(r=>{ html += `<tr><td>${r.Periodo}</td><td>${formatNum(r.Energia_Activa_Total)}</td><td>${formatNum(r.Energia_Activa_HP)}</td><td>${formatNum(r.Energia_Activa_HFP)}</td><td>${formatNum(r.Energia_Reactiva)}</td><td>${formatNum(r.Potencia_HP)}</td><td>${formatNum(r.Potencia_HFP)}</td></tr>`; });
   html += '</tbody></table></div>';
-  const w = window.open('', '_blank', 'width=1000,height=700,top=50,left=50');
-  w.document.write('<title>Tabla completa — Caso C</title>');
-  w.document.write('<h3>Tabla completa — Caso C</h3>');
-  w.document.write(html);
-  w.document.close();
+  const w = window.open('', '_blank', 'width=1000,height=700,top=50,left=50'); w.document.write('<title>Tabla completa — Caso C</title>'); w.document.write('<h3>Tabla completa — Caso C</h3>'); w.document.write(html); w.document.close();
 }
 
-function printReport(){
-  // Prints current page (the dashboard). The user can hide nav if desired.
-  window.print();
-}
+function printReport(){ window.print(); }
 
-/* ========== MAIN flow: carga y cómputos iniciales ========== */
+/* MAIN flow */
 async function init(){
   try{
     _('rawPre').textContent = 'Cargando CSV...';
     const parsed = await fetchAndParseCSV(CSV_PATH);
-    // store globally for utils
-    window.__PARSED_ROWS = parsed.map(r => ({
-      Periodo: r.Periodo,
-      Mes: r.Mes,
-      Año: r.Año,
-      Energia_Activa_Total: r.Energia_Activa_Total,
-      Energia_Activa_HP: r.Energia_Activa_HP,
-      Energia_Activa_HFP: r.Energia_Activa_HFP,
-      Energia_Reactiva: r.Energia_Reactiva,
-      Potencia_HP: r.Potencia_HP,
-      Potencia_HFP: r.Potencia_HFP
-    }));
-
-    // show preview
+    window.__PARSED_ROWS = parsed.map(r => ({ Periodo: r.Periodo, Mes: r.Mes, Año: r.Año, Energia_Activa_Total: r.Energia_Activa_Total, Energia_Activa_HP: r.Energia_Activa_HP, Energia_Activa_HFP: r.Energia_Activa_HFP, Energia_Reactiva: r.Energia_Reactiva, Potencia_HP: r.Potencia_HP, Potencia_HFP: r.Potencia_HFP }));
     _('rawPre').textContent = window.__PARSED_ROWS.slice(0,20).map(r=> `${r.Periodo} — Ea: ${formatNum(r.Energia_Activa_Total)}, Er: ${formatNum(r.Energia_Reactiva)}, HP: ${formatNum(r.Energia_Activa_HP)}, HFP: ${formatNum(r.Energia_Activa_HFP)}`).join('\n');
-
-    // compute and render (renderCharts will be in PARTE 3)
     computeAndRenderRobust(window.__PARSED_ROWS);
   } catch(err){
     _('rawPre').textContent = 'Error cargando CSV: ' + err.message;
@@ -699,417 +616,293 @@ async function init(){
   }
 }
 
-/* Start the flow (charts rendering in PART 3) */
 init();
+</script>
+<script>
+/* ========== PARTE 3: CÓMPUTOS, GRÁFICOS Y ANALÍTICA ========== */
 
-/* ========== FIN PARTE 2/3 — ahora continua PARTE 3/3 con gráficos y cierre ========== */
-/* ================= PARTE 3/3: CÓMPUTOS, GRÁFICOS (Chart.js), TABLAS Y CIERRE ================= */
-
-/* computeAndRenderRobust: toma rows (array de objetos ya parseados) y genera todo */
-function computeAndRenderRobust(rows) {
-  // Normalize rows (guarantee numbers)
-  const mapped = rows.map(r => ({
-    Periodo: r.Periodo || r.periodo || '',
+function computeAndRenderRobust(rows){
+  // Normalize
+  const mapped = rows.map(r=>({
+    Periodo: r.Periodo || '',
     Mes: r.Mes || (r.Periodo ? r.Periodo.split(/[-\s]/)[0] : ''),
     Año: r.Año || (r.Periodo && r.Periodo.split(/[-\s]/)[1] ? parseInt(r.Periodo.split(/[-\s]/)[1]) : null),
-    Energia_Activa_Total: Number(r.Energia_Activa_Total || r.Energia_Activa || 0),
-    Energia_Activa_HP: Number(r.Energia_Activa_HP || r.Energia_Activa_HP || 0),
-    Energia_Activa_HFP: Number(r.Energia_Activa_HFP || r.Energia_Activa_HFP || 0),
+    Energia_Activa_Total: Number(r.Energia_Activa_Total || 0),
+    Energia_Activa_HP: Number(r.Energia_Activa_HP || 0),
+    Energia_Activa_HFP: Number(r.Energia_Activa_HFP || 0),
     Energia_Reactiva: Number(r.Energia_Reactiva || 0),
     Potencia_HP: Number(r.Potencia_HP || 0),
     Potencia_HFP: Number(r.Potencia_HFP || 0)
   }));
 
-  // Make sure we have chronological order (safe)
   const monthMap = {ene:1,feb:2,mar:3,abr:4,may:5,jun:6,jul:7,ago:8,set:9,sep:9,oct:10,nov:11,dic:12};
-  mapped.forEach(r => {
-    const m = (r.Mes || '').toString().toLowerCase().slice(0,3);
-    r._m = monthMap[m] || 0;
-    r._y = r.Año || 0;
-  });
-  mapped.sort((a,b) => (a._y - b._y) || (a._m - b._m));
+  mapped.forEach(r=>{ const m=(r.Mes||'').toString().toLowerCase().slice(0,3); r._m = monthMap[m] || 0; r._y = r.Año || 0; });
+  mapped.sort((a,b)=> (a._y - b._y) || (a._m - b._m));
 
-  // arrays for charts
-  const labels = mapped.map(r => r.Periodo);
-  const Ea = mapped.map(r => r.Energia_Activa_Total);
-  const EhP = mapped.map(r => r.Energia_Activa_HP);
-  const EhFP = mapped.map(r => r.Energia_Activa_HFP);
-  const Er = mapped.map(r => r.Energia_Reactiva);
-  const pHP = mapped.map(r => r.Potencia_HP);
-  const pHFP = mapped.map(r => r.Potencia_HFP);
+  const labels = mapped.map(r=>r.Periodo);
+  const Ea = mapped.map(r=>r.Energia_Activa_Total);
+  const EhP = mapped.map(r=>r.Energia_Activa_HP);
+  const EhFP = mapped.map(r=>r.Energia_Activa_HFP);
+  const Er = mapped.map(r=>r.Energia_Reactiva);
+  const pHP = mapped.map(r=>r.Potencia_HP);
+  const pHFP = mapped.map(r=>r.Potencia_HFP);
 
-  // Avoid zeros being strings; ensure numbers
-  const toNumArr = a => a.map(x => (x === null || x === undefined) ? 0 : Number(x || 0));
-  const _Ea = toNumArr(Ea);
-  const _EhP = toNumArr(EhP);
-  const _EhFP = toNumArr(EhFP);
-  const _Er = toNumArr(Er);
-  const _pHP = toNumArr(pHP);
-  const _pHFP = toNumArr(pHFP);
+  const toNumArr = a => a.map(x=> (x===null||x===undefined)?0:Number(x||0));
+  const _Ea = toNumArr(Ea), _EhP = toNumArr(EhP), _EhFP = toNumArr(EhFP), _Er = toNumArr(Er), _pHP = toNumArr(pHP), _pHFP = toNumArr(pHFP);
 
-  // Factor de potencia por mes (FP = Ea / sqrt(Ea^2 + Er^2))
-  const FP = _Ea.map((e, i) => {
-    const er = _Er[i] || 0;
-    if (e === 0 && er === 0) return null;
-    return e / Math.sqrt(e * e + er * er);
-  });
+  // FP
+  const FP = _Ea.map((e,i)=>{ const er=_Er[i]||0; if(e===0 && er===0) return null; return e / Math.sqrt(e*e + er*er); });
+  const penal = FP.map(f => (f !== null && f < FP_UMBRAL));
 
-  // Penalizaciones (umbral)
-  const penal = FP.map(f => (f !== null && f < FP_UMBRAL ? true : false));
-
-  // Potencias medias (P,Q,S) usando horas del mes (HARAS_MES variable)
+  // P,Q,S
   const P = _Ea.map(e => e / HORAS_MES);
   const Q = _Er.map(er => er / HORAS_MES);
-  const S = P.map((p, i) => Math.sqrt(p * p + Q[i] * Q[i]));
+  const S = P.map((p,i)=>Math.sqrt(p*p + Q[i]*Q[i]));
 
-  // Dimensionamiento del banco de capacitores (Qc) por mes
-  const Qneeded = P.map((p, i) => {
-    const fp = FP[i];
-    if (!fp || fp <= 0) return null;
-    // limit to avoid numeric issues
-    const fpc = Math.max(Math.min(fp, 0.9999), -0.9999);
-    const phi_current = Math.acos(fpc);
-    const phi_goal = Math.acos(FP_OBJETIVO);
-    // Qc = P * (tan(phi_current) - tan(phi_goal))
-    return p * (Math.tan(phi_current) - Math.tan(phi_goal));
-  });
+  // Qneeded
+  const Qneeded = P.map((p,i)=> { const fp = FP[i]; if(!fp || fp<=0) return null; const fpc = Math.max(Math.min(fp,0.9999),-0.9999); const phi_current = Math.acos(fpc); const phi_goal = Math.acos(FP_OBJETIVO); return p * (Math.tan(phi_current) - Math.tan(phi_goal)); });
 
   // KPIs
-  const validFPs = FP.filter(v => v !== null && !isNaN(v));
-  const avgFP = validFPs.length ? (validFPs.reduce((a, b) => a + b, 0) / validFPs.length) : null;
-  const lastFP = FP[FP.length - 1] || null;
+  const validFPs = FP.filter(v=>v!==null && !isNaN(v));
+  const avgFP = validFPs.length ? (validFPs.reduce((a,b)=>a+b,0)/validFPs.length) : null;
+  const lastFP = FP[FP.length -1] || null;
   const maxPotObserved = Math.max(..._pHP.concat(_pHFP));
-  const recommendedMD = Math.ceil(maxPotObserved / 10) * 10;
+  const recommendedMD = Math.ceil(maxPotObserved/10)*10;
 
-  // Fill KPIs DOM
   _('kpiContainer').innerHTML = `
-    <div class="kpi"><small>FP promedio</small><div style="font-weight:700">${avgFP ? formatNum(avgFP,3) : 'n/a'}</div></div>
-    <div class="kpi"><small>Último FP</small><div style="font-weight:700">${lastFP ? formatNum(lastFP,3) : 'n/a'}</div></div>
-    <div class="kpi"><small>Máx. Potencia Observada</small><div style="font-weight:700">${formatNum(maxPotObserved,2)} kW</div></div>
-    <div class="kpi"><small>MD Recomendada</small><div style="font-weight:700">${recommendedMD} kW</div></div>
-    <div class="kpi"><small>Banco sugerido (aprox.)</small><div style="font-weight:700">110 kVAr</div></div>
+    <div class="kpi"><small>FP promedio</small><div>${avgFP ? formatNum(avgFP,3) : 'n/a'}</div></div>
+    <div class="kpi"><small>Último FP</small><div>${lastFP ? formatNum(lastFP,3) : 'n/a'}</div></div>
+    <div class="kpi"><small>Máx. Potencia Observada</small><div>${formatNum(maxPotObserved,2)} kW</div></div>
+    <div class="kpi"><small>MD Recomendada</small><div>${recommendedMD} kW</div></div>
+    <div class="kpi"><small>Banco sugerido (aprox.)</small><div>110 kVAr</div></div>
   `;
 
-  // Preview raw
-  _('rawPre').textContent = mapped.slice(0,20).map(r => `${r.Periodo} — Ea: ${formatNum(r.Energia_Activa_Total)}, Er: ${formatNum(r.Energia_Reactiva)}, HP: ${formatNum(r.Energia_Activa_HP)}, HFP: ${formatNum(r.Energia_Activa_HFP)}`).join('\n');
+  _('rawPre').textContent = mapped.slice(0,20).map(r=> `${r.Periodo} — Ea: ${formatNum(r.Energia_Activa_Total)}, Er: ${formatNum(r.Energia_Reactiva)}, HP: ${formatNum(r.Energia_Activa_HP)}, HFP: ${formatNum(r.Energia_Activa_HFP)}`).join('\n');
 
-  // Build FP table
+  // FP table
   let fpTable = '<table><thead><tr><th>Periodo</th><th>E. Activa (kWh)</th><th>E. Reactiva (kVArh)</th><th>FP</th><th>Penalización</th></tr></thead><tbody>';
-  mapped.forEach((r, i) => {
-    fpTable += `<tr>
-      <td>${r.Periodo}</td>
-      <td>${formatNum(r.Energia_Activa_Total,2)}</td>
-      <td>${formatNum(r.Energia_Reactiva,2)}</td>
-      <td>${FP[i] ? formatNum(FP[i],3) : 'n/a'}</td>
-      <td>${penal[i] ? 'Sí' : 'No'}</td>
-    </tr>`;
-  });
-  fpTable += '</tbody></table>';
-  _('fpTableWrap').innerHTML = fpTable;
+  mapped.forEach((r,i)=>{ fpTable += `<tr><td>${r.Periodo}</td><td>${formatNum(r.Energia_Activa_Total,2)}</td><td>${formatNum(r.Energia_Reactiva,2)}</td><td>${FP[i] ? formatNum(FP[i],3) : 'n/a'}</td><td>${penal[i] ? 'Sí' : 'No'}</td></tr>`; });
+  fpTable += '</tbody></table>'; _('fpTableWrap').innerHTML = fpTable;
 
   // Bank table
   let bankTable = '<table><thead><tr><th>Periodo</th><th>P (kW)</th><th>Q actual (kVAr)</th><th>Q deseada (kVAr)</th><th>Qc necesario (kVAr)</th></tr></thead><tbody>';
-  mapped.forEach((r, i) => {
-    const Pval = P[i] || 0;
-    const Qactual = Q[i] || 0;
-    const Qdeseada = Pval * Math.tan(Math.acos(FP_OBJETIVO));
-    const Qc = Qneeded[i] || 0;
-    bankTable += `<tr>
-      <td>${r.Periodo}</td>
-      <td>${formatNum(Pval,2)}</td>
-      <td>${formatNum(Qactual,2)}</td>
-      <td>${formatNum(Qdeseada,2)}</td>
-      <td>${isFinite(Qc) ? formatNum(Qc,2) : 'n/a'}</td>
-    </tr>`;
-  });
-  bankTable += '</tbody></table>';
-  _('bankTableWrap').innerHTML = bankTable;
+  mapped.forEach((r,i)=>{ const Pval = P[i]||0; const Qactual = Q[i]||0; const Qdeseada = Pval * Math.tan(Math.acos(FP_OBJETIVO)); const Qc = Qneeded[i]||0; bankTable += `<tr><td>${r.Periodo}</td><td>${formatNum(Pval,2)}</td><td>${formatNum(Qactual,2)}</td><td>${formatNum(Qdeseada,2)}</td><td>${isFinite(Qc) ? formatNum(Qc,2) : 'n/a'}</td></tr>`; });
+  bankTable += '</tbody></table>'; _('bankTableWrap').innerHTML = bankTable;
 
-  // Quarter aggregation for picos
+  // Quarter list
   const quarterList = computeQuarterList(mapped);
 
-  // Proyecciones (lineal simple usando últimos 4 puntos)
-  const n = _Ea.length;
-  const lastN = Math.min(4, n);
-  const eaSlice = _Ea.slice(n - lastN, n);
-  const mdObserved = mapped.map((_,i) => Math.max(_pHP[i] || 0, _pHFP[i] || 0));
-  const mdSlice = mdObserved.slice(n - lastN, n);
-
-  const slopeEa = linearSlope(Array.from({length:lastN}, (_,i)=>i), eaSlice);
-  const slopeMd = linearSlope(Array.from({length:lastN}, (_,i)=>i), mdSlice);
-
+  // Projections
+  const n = _Ea.length; const lastN = Math.min(4,n); const eaSlice = _Ea.slice(n-lastN,n); const mdObserved = mapped.map((_,i)=>Math.max(_pHP[i]||0,_pHFP[i]||0)); const mdSlice = mdObserved.slice(n-lastN,n);
+  const slopeEa = linearSlope(Array.from({length:lastN},(_,i)=>i), eaSlice); const slopeMd = linearSlope(Array.from({length:lastN},(_,i)=>i), mdSlice);
   const proyLabels = ['Ago-2025','Sep-2025','Oct-2025','Nov-2025','Dic-2025'];
-  const proyEa = [];
-  const proyPmax = [];
-  const lastEa = _Ea[_Ea.length - 1] || 0;
-  const lastPmax = mdObserved[mdObserved.length - 1] || 0;
-  for(let i=0;i<proyLabels.length;i++){
-    proyEa.push(Math.max(0, lastEa + slopeEa * i));
-    proyPmax.push(Math.max(0, lastPmax + slopeMd * i));
-  }
+  const proyEa = [], proyPmax = []; const lastEa = _Ea[_Ea.length-1]||0; const lastPmax = mdObserved[mdObserved.length-1]||0;
+  for(let i=0;i<proyLabels.length;i++){ proyEa.push(Math.max(0,lastEa + slopeEa * i)); proyPmax.push(Math.max(0,lastPmax + slopeMd * i)); }
 
   // Conclusions text
-  const conclHtml = `
-    <p><b>Resumen ejecutivo:</b></p>
-    <ul>
-      <li>FP promedio: ${avgFP ? formatNum(avgFP,3) : 'n/a'} (umbral: ${FP_UMBRAL}). Meses con penalización: ${penal.filter(Boolean).length} de ${penal.length}.</li>
-      <li>Máxima demanda observada: ${formatNum(maxPotObserved,2)} kW. MD recomendada: ${recommendedMD} kW.</li>
-      <li>Banco de capacitores sugerido: ~110 kVAr (resultado redondeado, ver tabla por mes).</li>
-      <li>Proyección: Consumo mensual (Ea) podría superar los 500,000 kWh en Q4-2025 según tendencia lineal simple.</li>
-    </ul>
-  `;
+  const conclHtml = `<p><b>Resumen ejecutivo:</b></p><ul><li>FP promedio: ${avgFP ? formatNum(avgFP,3) : 'n/a'} (umbral: ${FP_UMBRAL}). Meses con penalización: ${penal.filter(Boolean).length} de ${penal.length}.</li><li>Máxima demanda observada: ${formatNum(maxPotObserved,2)} kW. MD recomendada: ${recommendedMD} kW.</li><li>Banco de capacitores sugerido: ~110 kVAr.</li><li>Proyección: Consumo mensual (Ea) podría aumentar según tendencia.</li></ul>`;
   _('conclText').innerHTML = conclHtml;
 
-  // Finally render charts (Chart.js)
+  // Analisis técnico-económico (visual + cálculos)
+  try {
+    const totalHFP = _EhFP.reduce((a,b)=>a+b,0);
+    const totalHP = _EhP.reduce((a,b)=>a+b,0);
+    const totalEa = _Ea.reduce((a,b)=>a+b,0) || (totalHP + totalHFP);
+    const pctHFP = totalEa > 0 ? (totalHFP / totalEa) * 100 : 0;
+    const recomendacion = pctHFP >= 95 ? 'Mantener/migrar a tarifa diferenciada HP/HFP (MT3 / BT5)' : (pctHFP >= 70 ? 'Tarifa diferenciada HP/HFP (evaluar MT3 / BT5)' : 'Evaluar alternativas centradas en demanda');
+
+    const analisisHtml = `
+      <h4>Comportamiento real del consumo (suma 2024–2025)</h4>
+      <p>Consumo HFP: <b>${formatNum(totalHFP,0)} kWh</b><br>Consumo HP: <b>${formatNum(totalHP,0)} kWh</b><br>Participación HFP: <b>${formatNum(pctHFP,2)}%</b></p>
+      <h4>Recomendación automática</h4>
+      <p>${recomendacion}.</p>
+      <div style="margin-top:10px;padding:10px;border-radius:8px;background:#fffefc;border:1px solid rgba(0,0,0,0.04)">
+        <b>Conclusión:</b> Con ${formatNum(pctHFP,2)}% del consumo en HFP, la alternativa <i>MT3 / BT5</i> es la más acorde. Tarifa plana no recomendable; tarifas de potencia requerirían estudio de MD.
+      </div>
+    `;
+    _('analisisContent').innerHTML = analisisHtml;
+  } catch(e){
+    _('analisisContent').innerHTML = 'No fue posible calcular el análisis automáticamente: ' + e.message;
+  }
+
+  // Render charts
   renderCharts({
-    labels,
-    Ea: _Ea,
-    Er: _Er,
-    EhP: _EhP,
-    EhFP: _EhFP,
-    FP,
-    P,
-    Q,
-    S,
-    pHP: _pHP,
-    pHFP: _pHFP,
-    Qneeded,
-    quarterList,
-    mdObserved,
-    proyLabels,
-    proyEa,
-    proyPmax
+    labels, Ea: _Ea, Er: _Er, EhP: _EhP, EhFP: _EhFP, FP, P, Q, S, pHP: _pHP, pHFP: _pHFP, Qneeded, quarterList, mdObserved, proyLabels, proyEa, proyPmax
   });
 
-  // expose for debugging
   window.__PARSED_ROWS = mapped;
 }
 
-
-/* ---------- renderCharts: crea/actualiza todos los gráficos ---------- */
+/* ---------- renderCharts ---------- */
 function renderCharts(payload){
-  // ensure global store
   window._chartObjs = window._chartObjs || {};
-  function destroy(id){
-    if(window._chartObjs[id] && typeof window._chartObjs[id].destroy === 'function'){
-      try { window._chartObjs[id].destroy(); } catch(e){ /* ignore */ }
-      window._chartObjs[id] = null;
-    }
-  }
+  function destroy(id){ if(window._chartObjs[id] && typeof window._chartObjs[id].destroy === 'function'){ try{ window._chartObjs[id].destroy(); }catch(e){} window._chartObjs[id]=null; } }
 
-  // Generic options for modern/clean (apple-like) look
   const commonOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'top', labels: { boxWidth:12, boxHeight:6, padding:12 } },
-      tooltip: {
-        callbacks: {
-          label: function(ctx){
-            const val = ctx.parsed.y ?? ctx.parsed;
-            if(isFinite(val)) return `${ctx.dataset.label}: ${formatNum(val,2)}`;
-            return `${ctx.dataset.label}: n/a`;
-          }
-        }
-      }
-    },
-    scales: {
-      x: { ticks: { maxRotation: 0, autoSkip: true }, grid: { display:false } },
-      y: { grid: { color: 'rgba(15,23,42,0.04)' } }
-    }
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ position:'top', labels:{ boxWidth:12, boxHeight:6, padding:12 } }, tooltip:{ callbacks:{ label:function(ctx){ const val = ctx.parsed.y ?? ctx.parsed; if(isFinite(val)) return `${ctx.dataset.label}: ${formatNum(val,2)}`; return `${ctx.dataset.label}: n/a`; } } } },
+    scales: { x:{ ticks:{ maxRotation:0, autoSkip:true }, grid:{ display:false } }, y:{ grid:{ color:'rgba(15,23,42,0.04)' } } }
   };
 
-  // FP chart (line)
+  // FP
   destroy('chartFP');
-  window._chartObjs['chartFP'] = new Chart(_('chartFP'), {
-    type: 'line',
-    data: {
-      labels: payload.labels,
-      datasets: [
-        { label: 'Factor de Potencia (FP)', data: payload.FP.map(v => v===null ? NaN : Number(v)), borderColor: '#0b6cff', backgroundColor: 'rgba(11,108,255,0.08)', tension:0.25, pointRadius:4, spanGaps:true },
-        { label: 'Umbral (0.92)', data: payload.labels.map(_=> FP_UMBRAL), borderColor: '#ef4444', borderDash:[6,6], pointRadius:0, fill:false }
-      ]
-    },
-    options: Object.assign({}, commonOptions, { scales: { y: { min: 0.7, max: 1.02, title: { display:true, text:'FP' } } }, interaction: { intersect:false, mode:'index' } })
-  });
+  window._chartObjs['chartFP'] = new Chart(_('chartFP'), { type:'line', data:{ labels:payload.labels, datasets:[ { label:'Factor de Potencia (FP)', data: payload.FP.map(v=>v===null?NaN:Number(v)), borderColor:'#0b6cff', backgroundColor:'rgba(11,108,255,0.08)', tension:0.25, pointRadius:4, spanGaps:true }, { label:'Umbral (0.92)', data: payload.labels.map(_=>FP_UMBRAL), borderColor:'#ef4444', borderDash:[6,6], pointRadius:0, fill:false } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ min:0.7, max:1.02, title:{ display:true, text:'FP' } } }, interaction:{ intersect:false, mode:'index' } }) });
 
-  // Activa vs Reactiva (dual bar)
+  // Activa vs Reactiva
   destroy('chartActReact');
-  window._chartObjs['chartActReact'] = new Chart(_('chartActReact'), {
-    type: 'bar',
-    data: {
-      labels: payload.labels,
-      datasets: [
-        { label: 'E. Activa (kWh)', data: payload.Ea, backgroundColor: 'rgba(6,166,162,0.9)' },
-        { label: 'E. Reactiva (kVArh)', data: payload.Er, backgroundColor: 'rgba(245,158,11,0.9)' }
-      ]
-    },
-    options: Object.assign({}, commonOptions, { scales: { y: { title: { display:true, text:'kWh / kVArh' } } }, interaction: { mode:'index', intersect:false } })
-  });
+  window._chartObjs['chartActReact'] = new Chart(_('chartActReact'), { type:'bar', data:{ labels:payload.labels, datasets:[ { label:'E. Activa (kWh)', data: payload.Ea, backgroundColor:'rgba(6,166,162,0.9)' }, { label:'E. Reactiva (kVArh)', data: payload.Er, backgroundColor:'rgba(245,158,11,0.9)' } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kWh / kVArh' } } }, interaction:{ mode:'index', intersect:false } }) });
 
-  // HP vs HFP monthly (stacked grouped bars) — ensure HP/HFP arrays exist
+  // HP vs HFP monthly
   destroy('chartHPHFP');
-  window._chartObjs['chartHPHFP'] = new Chart(_('chartHPHFP'), {
-    type: 'bar',
-    data: {
-      labels: payload.labels,
-      datasets: [
-        { label: 'HP (kWh)', data: payload.EhP, backgroundColor: 'rgba(239,68,68,0.9)' },
-        { label: 'HFP (kWh)', data: payload.EhFP, backgroundColor: 'rgba(99,102,241,0.9)' }
-      ]
-    },
-    options: Object.assign({}, commonOptions, { scales: { y: { title:{display:true,text:'kWh'} } }, interaction: { mode:'index', intersect:false } })
-  });
+  window._chartObjs['chartHPHFP'] = new Chart(_('chartHPHFP'), { type:'bar', data:{ labels:payload.labels, datasets:[ { label:'HP (kWh)', data: payload.EhP, backgroundColor:'rgba(239,68,68,0.9)' }, { label:'HFP (kWh)', data: payload.EhFP, backgroundColor:'rgba(99,102,241,0.9)' } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kWh'} } }, interaction:{ mode:'index', intersect:false } }) });
 
-  // Bank chart: Q actual / Q deseada / Qc necesario
+  // Bank chart
   destroy('chartBank');
-  window._chartObjs['chartBank'] = new Chart(_('chartBank'), {
-    type: 'bar',
-    data: {
-      labels: payload.labels,
-      datasets: [
-        { label: 'Q actual (kVAr)', data: payload.Q.map(q => q || 0), backgroundColor: 'rgba(139,92,246,0.9)' },
-        { label: 'Q deseada (kVAr) @ FP objetivo', data: payload.P.map(p => p * Math.tan(Math.acos(FP_OBJETIVO))), backgroundColor: 'rgba(6,182,212,0.9)' },
-        { label: 'Qc necesario (kVAr)', data: payload.Qneeded.map(q => (q===null||q===undefined)?0:q), backgroundColor: 'rgba(245,158,11,0.9)' }
-      ]
-    },
-    options: Object.assign({}, commonOptions, { scales: { y: { title:{display:true,text:'kVAr'} } }, interaction: { mode:'index', intersect:false } })
-  });
+  window._chartObjs['chartBank'] = new Chart(_('chartBank'), { type:'bar', data:{ labels:payload.labels, datasets:[ { label:'Q actual (kVAr)', data: payload.Q.map(q=>q||0), backgroundColor:'rgba(139,92,246,0.9)' }, { label:'Q deseada (kVAr) @ FP objetivo', data: payload.P.map(p=>p*Math.tan(Math.acos(FP_OBJETIVO))), backgroundColor:'rgba(6,182,212,0.9)' }, { label:'Qc necesario (kVAr)', data: payload.Qneeded.map(q=>(q===null||q===undefined)?0:q), backgroundColor:'rgba(245,158,11,0.9)' } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kVAr' } } }, interaction:{ mode:'index', intersect:false } }) });
 
-  // P,Q,S monthly (line)
+  // P,Q,S
   destroy('chartPQS');
-  window._chartObjs['chartPQS'] = new Chart(_('chartPQS'), {
-    type: 'line',
-    data: {
-      labels: payload.labels,
-      datasets: [
-        { label: 'P (kW)', data: payload.P, borderColor: '#0b6cff', backgroundColor: 'rgba(11,108,255,0.08)', tension:0.2 },
-        { label: 'Q (kVAr)', data: payload.Q, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.08)', tension:0.2 },
-        { label: 'S (kVA)', data: payload.S, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.08)', tension:0.2 }
-      ]
-    },
-    options: Object.assign({}, commonOptions, { scales: { y: { title:{display:true,text:'kW / kVAr / kVA'} } } })
-  });
+  window._chartObjs['chartPQS'] = new Chart(_('chartPQS'), { type:'line', data:{ labels:payload.labels, datasets:[ { label:'P (kW)', data: payload.P, borderColor:'#0b6cff', backgroundColor:'rgba(11,108,255,0.08)', tension:0.2 }, { label:'Q (kVAr)', data: payload.Q, borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)', tension:0.2 }, { label:'S (kVA)', data: payload.S, borderColor:'#ef4444', backgroundColor:'rgba(239,68,68,0.08)', tension:0.2 } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kW / kVAr / kVA' } } } }) });
 
-  // Tendencia P mensual (line)
+  // Tendencia P
   destroy('chartTP');
-  window._chartObjs['chartTP'] = new Chart(_('chartTP'), {
-    type: 'line',
-    data: { labels: payload.labels, datasets: [{ label:'P (kW)', data: payload.P, borderColor:'#10b981', backgroundColor:'rgba(16,185,129,0.08)', tension:0.25 }]},
-    options: Object.assign({}, commonOptions, { scales:{ y:{ title:{display:true,text:'kW'} } } })
-  });
+  window._chartObjs['chartTP'] = new Chart(_('chartTP'), { type:'line', data:{ labels:payload.labels, datasets:[ { label:'P (kW)', data: payload.P, borderColor:'#10b981', backgroundColor:'rgba(16,185,129,0.08)', tension:0.25 } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kW' } } } }) });
 
   // Picos trimestrales
   destroy('chartPicos');
-  const qLabels = payload.quarterList.map(q => q.quarter);
-  const qPeaks = payload.quarterList.map(q => q.maxPeak);
-  window._chartObjs['chartPicos'] = new Chart(_('chartPicos'), {
-    type: 'bar',
-    data: { labels: qLabels, datasets: [{ label:'Pico trimestral (kW)', data: qPeaks, backgroundColor: 'rgba(239,68,68,0.9)'}] },
-    options: Object.assign({}, commonOptions, { scales:{ y:{ title:{display:true,text:'kW'} } } })
-  });
+  const qLabels = payload.quarterList.map(q=>q.quarter); const qPeaks = payload.quarterList.map(q=>q.maxPeak);
+  window._chartObjs['chartPicos'] = new Chart(_('chartPicos'), { type:'bar', data:{ labels:qLabels, datasets:[ { label:'Pico trimestral (kW)', data:qPeaks, backgroundColor:'rgba(239,68,68,0.9)' } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kW' } } } }) });
 
-  // HP vs HFP anual (grouped by year)
+  // HP vs HFP anual (FIX: use parsed rows sums)
   destroy('chartHPHFPAnual');
-  const years = [...new Set(payload.labels.map(l => (l||'').toString().split('-')[1] || ''))].filter(Boolean).sort();
-  const hpByYear = years.map(y => payload.labels.reduce((acc,lab,i) => (lab.includes(y) ? acc + (payload.EhP[i] || 0) : acc), 0));
-  const hfpByYear = years.map(y => payload.labels.reduce((acc,lab,i) => (lab.includes(y) ? acc + (payload.EhFP[i] || 0) : acc), 0));
-  window._chartObjs['chartHPHFPAnual'] = new Chart(_('chartHPHFPAnual'), {
-    type: 'bar',
-    data: { labels: years, datasets: [ { label:'HP (kWh)', data: hpByYear, backgroundColor: 'rgba(146,64,14,0.9)' }, { label:'HFP (kWh)', data: hfpByYear, backgroundColor: 'rgba(17,24,39,0.9)' } ] },
-    options: Object.assign({}, commonOptions, { scales:{ y:{ title:{display:true,text:'kWh'} } } })
-  });
+  let years = [], hpByYear = [], hfpByYear = [];
+  try {
+    const parsed = (window.__PARSED_ROWS || []).map(r => ({ Año: r.Año, Energia_Activa_HP: Number(r.Energia_Activa_HP||0), Energia_Activa_HFP: Number(r.Energia_Activa_HFP||0) }));
+    if(parsed && parsed.length){
+      years = [...new Set(parsed.map(r=>r.Año).filter(Boolean))].sort();
+      hpByYear = years.map(y => parsed.filter(r=>r.Año===y).reduce((acc,r)=>acc+(r.Energia_Activa_HP||0),0));
+      hfpByYear = years.map(y => parsed.filter(r=>r.Año===y).reduce((acc,r)=>acc+(r.Energia_Activa_HFP||0),0));
+    } else {
+      years = [...new Set(payload.labels.map(l => (l||'').toString().split('-')[1] || ''))].filter(Boolean).sort();
+      hpByYear = years.map(y => payload.labels.reduce((acc,lab,i) => (lab.includes(y) ? acc + (payload.EhP[i] || 0) : acc), 0));
+      hfpByYear = years.map(y => payload.labels.reduce((acc,lab,i) => (lab.includes(y) ? acc + (payload.EhFP[i] || 0) : acc), 0));
+    }
+  } catch(e){
+    years = [...new Set(payload.labels.map(l => (l||'').toString().split('-')[1] || ''))].filter(Boolean).sort();
+    hpByYear = years.map(y => payload.labels.reduce((acc,lab,i) => (lab.includes(y) ? acc + (payload.EhP[i] || 0) : acc), 0));
+    hfpByYear = years.map(y => payload.labels.reduce((acc,lab,i) => (lab.includes(y) ? acc + (payload.EhFP[i] || 0) : acc), 0));
+  }
 
-  // Penalidades ilustrativas
+  window._chartObjs['chartHPHFPAnual'] = new Chart(_('chartHPHFPAnual'), { type:'bar', data:{ labels:years, datasets:[ { label:'HP (kWh)', data:hpByYear, backgroundColor:'rgba(146,64,14,0.9)' }, { label:'HFP (kWh)', data:hfpByYear, backgroundColor:'rgba(17,24,39,0.9)' } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kWh' } } } }) });
+
+  // Penalidades
   destroy('chartPenalidades');
   const penalValues = payload.FP.map(v => (v && v < FP_UMBRAL) ? (FP_UMBRAL - v) * 1000 : 0);
-  window._chartObjs['chartPenalidades'] = new Chart(_('chartPenalidades'), {
-    type: 'bar',
-    data: { labels: payload.labels, datasets: [{ label:'Indicador penalidad (u.arb)', data: penalValues, backgroundColor: 'rgba(239,68,68,0.9)'}] },
-    options: Object.assign({}, commonOptions, { scales:{ y:{ title:{display:true,text:'u.arb.'} } } })
-  });
+  window._chartObjs['chartPenalidades'] = new Chart(_('chartPenalidades'), { type:'bar', data:{ labels:payload.labels, datasets:[ { label:'Indicador penalidad (u.arb)', data:penalValues, backgroundColor:'rgba(239,68,68,0.9)' } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'u.arb.' } } } }) });
 
-  // MD vs contratada
+  // MD
   destroy('chartMD');
-  const mdObserved = payload.mdObserved;
-  const mdMax = Math.max(...mdObserved);
-  const MD_contratada = Math.ceil(mdMax / 10) * 10;
-  window._chartObjs['chartMD'] = new Chart(_('chartMD'), {
-    type: 'line',
-    data: { labels: payload.labels, datasets: [
-      { label:'MD observada (kW)', data: mdObserved, borderColor:'#0b6cff', backgroundColor:'rgba(11,108,255,0.06)', tension:0.2 },
-      { label:'MD contratada (kW)', data: payload.labels.map(_ => MD_contratada), borderColor:'#ef4444', borderDash:[6,6], pointRadius:0, fill:false }
-    ]},
-    options: Object.assign({}, commonOptions, { scales:{ y:{ title:{display:true,text:'kW'} } } })
-  });
+  const mdObserved = payload.mdObserved; const mdMax = Math.max(...mdObserved); const MD_contratada = Math.ceil(mdMax/10)*10;
+  window._chartObjs['chartMD'] = new Chart(_('chartMD'), { type:'line', data:{ labels:payload.labels, datasets:[ { label:'MD observada (kW)', data:mdObserved, borderColor:'#0b6cff', backgroundColor:'rgba(11,108,255,0.06)', tension:0.2 }, { label:'MD contratada (kW)', data:payload.labels.map(_=>MD_contratada), borderColor:'#ef4444', borderDash:[6,6], pointRadius:0, fill:false } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kW' } } } }) });
 
-  // Proyecciones Ea y Pmax
+  // Projections
   destroy('chartProyEa'); destroy('chartProyPmax');
-  window._chartObjs['chartProyEa'] = new Chart(_('chartProyEa'), {
-    type:'line',
-    data: { labels: payload.proyLabels, datasets: [{ label:'Ea proyectada (kWh)', data: payload.proyEa, borderColor:'#0b6cff', fill:false }]},
-    options: Object.assign({}, commonOptions, { scales:{ y:{ title:{display:true,text:'kWh'} } } })
-  });
-  window._chartObjs['chartProyPmax'] = new Chart(_('chartProyPmax'), {
-    type:'line',
-    data: { labels: payload.proyLabels, datasets: [{ label:'Pmax proyectada (kW)', data: payload.proyPmax, borderColor:'#ef4444', fill:false }]},
-    options: Object.assign({}, commonOptions, { scales:{ y:{ title:{display:true,text:'kW'} } } })
-  });
+  window._chartObjs['chartProyEa'] = new Chart(_('chartProyEa'), { type:'line', data:{ labels:payload.proyLabels, datasets:[ { label:'Ea proyectada (kWh)', data:payload.proyEa, borderColor:'#0b6cff', fill:false } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kWh' } } } }) });
+  window._chartObjs['chartProyPmax'] = new Chart(_('chartProyPmax'), { type:'line', data:{ labels:payload.proyLabels, datasets:[ { label:'Pmax proyectada (kW)', data:payload.proyPmax, borderColor:'#ef4444', fill:false } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'kW' } } } }) });
 
-  // Descriptions under charts (short explanation)
-  _('descFP').innerHTML = `Muestra la evolución mensual del Factor de Potencia (FP). Si FP < ${FP_UMBRAL} es considerado penalizable por normativa — ver tabla.`;
-  _('descActReact').innerHTML = `Comparación mensual entre Energía Activa (kWh) y Energía Reactiva (kVArh). Un nivel alto de reactiva indica necesidad de compensación.`;
-  _('descHPHFP').innerHTML = `Distribución entre Energía consumida en Hora Punta (HP) y Fuera Punta (HFP). Útil para planear gestión de cargas.`;
-  _('descPQS').innerHTML = `Perfil mensual de Potencia activa (P), reactiva (Q) y aparente (S).`;
-  _('descTP').innerHTML = `Tendencia de P (kW) mes a mes.`;
-  _('descPicos').innerHTML = `Picos máximos por trimestre — ayuda a evaluar demanda contratada.`;
-  _('descHPHFPAnual').innerHTML = `Comparativo anual de consumo HP vs HFP.`;
-  _('descPenalidades').innerHTML = `Estimación ilustrativa de impacto por tener FP por debajo del umbral. No es un cálculo contractual.`;
-  _('descMD').innerHTML = `Comparación de la Máxima Demanda observada vs MD contratada (línea punteada).`;
+  // ANALISIS: Distrib HP vs HFP pie & Tarifas comparador
+  destroy('chartDistribHPHFP'); destroy('chartTarifas');
 
-} // end renderCharts
+  // Pie for distribution
+  const totalHFP = payload.EhFP.reduce((a,b)=>a+(b||0),0);
+  const totalHP = payload.EhP.reduce((a,b)=>a+(b||0),0);
+  const totalAll = totalHFP + totalHP;
+  const pctHFP = totalAll? (totalHFP/totalAll)*100 : 0;
+  window._chartObjs['chartDistribHPHFP'] = new Chart(_('chartDistribHPHFP'), { type:'doughnut', data:{ labels:['HFP','HP'], datasets:[ { data:[totalHFP,totalHP], backgroundColor:['rgba(17,24,39,0.95)','rgba(239,68,68,0.95)'] } ] }, options: Object.assign({}, commonOptions, { plugins:{ legend:{ position:'bottom' } } }) });
 
+  // Tarifas simulated comparison
+  // Simple model (you can customize prices later)
+  // Assumptions default (example): tarifa plana S/0.40/kWh (all energy), tarifa HP/HFP: HP S/0.65, HFP S/0.22, tarifa potencia: energy avg S/0.30 + demand charge S/20 per kW
+  const price_plana = 0.40;
+  const price_hp = 0.65;
+  const price_hfp = 0.22;
+  const demand_charge = 20; // S/ per kW per month (example)
+  const avg_energy_price_by_demand = 0.30;
 
-/* ---------- Small helpers used above ---------- */
+  const costo_plana = totalAll * price_plana;
+  const costo_hp_hfp = (totalHP * price_hp) + (totalHFP * price_hfp);
+  const md_est = Math.max(...payload.mdObserved);
+  const costo_potencia = totalAll * avg_energy_price_by_demand + (md_est * demand_charge);
+
+  const tarifasLabels = ['Tarifa plana','Tarifa HP/HFP (MT3/BT5)','Tarifa x Potencia'];
+  const tarifasValues = [costo_plana, costo_hp_hfp, costo_potencia];
+
+  window._chartObjs['chartTarifas'] = new Chart(_('chartTarifas'), { type:'bar', data:{ labels:tarifasLabels, datasets:[ { label:'Costo estimado mensual (S/)', data:tarifasValues, backgroundColor:['rgba(99,102,241,0.9)','rgba(6,182,212,0.9)','rgba(239,68,68,0.9)'] } ] }, options: Object.assign({}, commonOptions, { scales:{ y:{ title:{ display:true, text:'S/' } } }, plugins:{ legend:{ display:false } } }) });
+
+  // Fill description boxes for analyses
+  _('descDistrib').innerHTML = `HFP: <b>${formatNum(totalHFP,0)} kWh</b> — HP: <b>${formatNum(totalHP,0)} kWh</b> — HFP representa <b>${formatNum(pctHFP,2)}%</b> del total.`;
+  _('descTarifas').innerHTML = `<b>Estimación de costos mensuales</b>: Tarifa plana: <b>S/${formatNum(costo_plana,2)}</b>, Tarifa HP/HFP: <b>S/${formatNum(costo_hp_hfp,2)}</b>, Tarifa por potencia (ejemplo): <b>S/${formatNum(costo_potencia,2)}</b>.`;
+
+  // Highlight recommended tariff
+  const minCosto = Math.min(...tarifasValues);
+  const recIndex = tarifasValues.indexOf(minCosto);
+  const recLabel = tarifasLabels[recIndex];
+  const ahorroPct = ((Math.max(...tarifasValues) - minCosto) / Math.max(...tarifasValues)) * 100;
+
+  const analisisResumen = `
+    <h4>Resultado económico (simulado)</h4>
+    <p>Tarifa recomendada: <b>${recLabel}</b></p>
+    <p>Ahorro estimado frente a la alternativa más cara: <b>${formatNum(ahorroPct,2)}%</b></p>
+    <ul>
+      <li>Tarifa plana: S/${formatNum(costo_plana,2)}</li>
+      <li>Tarifa HP/HFP: S/${formatNum(costo_hp_hfp,2)}</li>
+      <li>Tarifa por potencia (ejemplo): S/${formatNum(costo_potencia,2)}</li>
+    </ul>
+
+  `;
+  _('analisisContent').insertAdjacentHTML('beforeend', analisisResumen);
+
+  // Descriptions under charts
+  _('descFP').innerHTML = `Evolución mensual del Factor de Potencia (FP). Si FP < ${FP_UMBRAL} se considera penalizable.`;
+  _('descActReact').innerHTML = `Comparación mensual entre Energía Activa (kWh) y Reactiva (kVArh).`;
+  _('descHPHFP').innerHTML = `Distribución entre energía HP y HFP (mensual).`;
+  _('descPQS').innerHTML = `Perfil mensual de P, Q y S.`;
+  _('descTP').innerHTML = `Tendencia de P mes a mes.`;
+  _('descPicos').innerHTML = `Picos trimestrales.`;
+  _('descHPHFPAnual').innerHTML = `Comparativo anual HP vs HFP (suma por año).`;
+  _('descPenalidades').innerHTML = `Indicador ilustrativo de penalidades por FP bajo umbral.`;
+  _('descMD').innerHTML = `Comparación MD observada vs MD contratada estimada.`;
+}
+
+/* ---------- Small helpers ---------- */
 function computeQuarterList(rows){
   const monthMap = {ene:1,feb:2,mar:3,abr:4,may:5,jun:6,jul:7,ago:8,set:9,sep:9,oct:10,nov:11,dic:12};
   const quarters = {};
-  rows.forEach(r => {
-    const mon = (r.Mes || '').toString().toLowerCase().slice(0,3);
+  rows.forEach(r=>{
+    const mon = (r.Mes||'').toString().toLowerCase().slice(0,3);
     const mi = monthMap[mon] || 0;
-    const qIdx = mi ? (Math.floor((mi-1)/3) + 1) : 0;
-    const key = `${r.Año || ''}Q${qIdx || ''}`;
+    const qIdx = mi ? (Math.floor((mi-1)/3)+1) : 0;
+    const key = `${r.Año||''}Q${qIdx||''}`;
     if(!quarters[key]) quarters[key] = {Psum:0,Qsum:0,Ssum:0,count:0,peaks:[]};
-    const Pval = (r.Energia_Activa_Total || 0) / HORAS_MES;
-    const Qval = (r.Energia_Reactiva || 0) / HORAS_MES;
+    const Pval = (r.Energia_Activa_Total||0)/HORAS_MES;
+    const Qval = (r.Energia_Reactiva||0)/HORAS_MES;
     const Sval = Math.sqrt(Pval*Pval + Qval*Qval);
-    quarters[key].Psum += Pval; quarters[key].Qsum += Qval; quarters[key].Ssum += Sval; quarters[key].count += 1; quarters[key].peaks.push(Math.max(Pval, Sval));
+    quarters[key].Psum += Pval; quarters[key].Qsum += Qval; quarters[key].Ssum += Sval; quarters[key].count += 1; quarters[key].peaks.push(Math.max(Pval,Sval));
   });
-  return Object.keys(quarters).filter(k => quarters[k].count>0).sort().map(k => {
-    const v = quarters[k];
-    return { quarter: k, avgP: v.Psum / v.count, avgQ: v.Qsum / v.count, avgS: v.Ssum / v.count, maxPeak: Math.max(...v.peaks) };
-  });
+  return Object.keys(quarters).filter(k=>quarters[k].count>0).sort().map(k=>{ const v=quarters[k]; return { quarter:k, avgP:v.Psum/v.count, avgQ:v.Qsum/v.count, avgS:v.Ssum/v.count, maxPeak: Math.max(...v.peaks) }; });
 }
 
 function linearSlope(xs, ys){
-  if(!xs || !ys || xs.length !== ys.length || xs.length === 0) return 0;
-  const n = xs.length;
-  const xm = xs.reduce((a,b)=>a+b,0)/n;
-  const ym = ys.reduce((a,b)=>a+b,0)/n;
-  let num = 0, den = 0;
+  if(!xs || !ys || xs.length !== ys.length || xs.length===0) return 0;
+  const n=xs.length; const xm = xs.reduce((a,b)=>a+b,0)/n; const ym=ys.reduce((a,b)=>a+b,0)/n; let num=0, den=0;
   for(let i=0;i<n;i++){ num += (xs[i]-xm)*(ys[i]-ym); den += (xs[i]-xm)*(xs[i]-xm); }
-  return den === 0 ? 0 : num/den;
+  return den===0?0:num/den;
 }
 
-/* mappedYears helper used earlier (if needed) */
-function mappedYears(labels){
-  return labels.map(l => {
-    const parts = (l || '').toString().split('-');
-    return parts.length > 1 ? parts[1] : (/\d{4}/.test(l) ? l.match(/\d{4}/)[0] : '');
-  });
-}
+/* mappedYears helper */
+function mappedYears(labels){ return labels.map(l=>{ const parts = (l||'').toString().split('-'); return parts.length>1?parts[1]:(/\d{4}/.test(l)?l.match(/\d{4}/)[0]:''); }); }
 
-/* End of PARTE 3/3: close script and HTML */
+/* End of scripts */
 </script>
 
 </body>
